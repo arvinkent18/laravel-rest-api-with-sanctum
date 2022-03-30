@@ -60,4 +60,14 @@ class UserService
             return Log::debug(`Failed to login user due to: {$e->getMessage()}`);
         }
     }
+
+    /**
+     * Show current logged user's products
+     * 
+     * @return Product
+     */
+    public function showMyProducts(int $id)
+    {
+        return $this->userRepository->showMyProducts($id);
+    }
 }

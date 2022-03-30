@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -27,7 +29,9 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        return Product::create($request->all());
+        return (new ProductResource(auth()->user()->products()->create($request->all())))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**

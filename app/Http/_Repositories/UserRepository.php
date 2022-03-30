@@ -43,4 +43,14 @@ class UserRepository
 
         return $user;
     }
+
+    /**
+     * Show current logged user's products
+     * 
+     * @return \App\Models\Product
+     */
+    public function showMyProducts(int $id)
+    {
+        return $this->user->findOrFail($id)->products()->get();
+    }
 }

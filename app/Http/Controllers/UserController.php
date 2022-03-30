@@ -7,7 +7,9 @@ use App\Http\Requests\LoginRequest;
 
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\LoginResource;
+use App\Http\Resources\ProductCollection;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -60,5 +62,17 @@ class UserController extends Controller
                 'message' => 'Logged out',
             ];
         }
+    }
+
+    /**
+     * Show current logged user's products
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function showMyProducts()
+    {
+        return (new ProductCollection($this->userService->showMyProducts(auth()->user()->id)))
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 }
