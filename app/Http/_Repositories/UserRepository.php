@@ -3,6 +3,7 @@
 namespace App\Http\_Repositories;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
@@ -28,8 +29,18 @@ class UserRepository
         ]);
     }
 
+    /**
+     * Login the user
+     * 
+     * @param array  $data
+     * @return bool|User
+     */
     public function login(array $data)
     {
+        $user = $this->user->where('email', $data['email'])->first();
+        
+        if (!$user && !Hash::check($data['password'], $user->password)) return false;
 
+        return $user;
     }
 }

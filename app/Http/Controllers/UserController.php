@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -44,22 +45,9 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function login(LoginRequest $request) {
-        $user = User::where('email', $request->get('email'))->first();
-
-        if (!$user || !Hash::check($request->get('password'), $user->password)) {
-            return response([
-                'message' => 'Invalid credentials',
-            ], 401);
-        }
-
-        $token = $user->createToken('token-sample')->plainTextToken;
-
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
-
-        return response($response, 201);
+        return (new LoginResource($this->userService->login($request->all())))
+            ->response()
+            ->setStatusCode(Response::HTTP_ACCEPTED);
     }
 
     public function logout() {
