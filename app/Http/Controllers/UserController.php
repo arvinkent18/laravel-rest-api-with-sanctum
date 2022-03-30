@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\_Services\UserService;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
 
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {   
@@ -50,11 +49,16 @@ class UserController extends Controller
             ->setStatusCode(Response::HTTP_ACCEPTED);
     }
 
-    public function logout() {
-        auth()->user()->tokens()->delete();
+    /**
+     * Logout the user
+     */
+    public function logout(Request $request) {
+        if (auth()->check()){
+            $request->user()->currentAccessToken()->delete();
 
-        return [
-            'message' => 'Logged out',
-        ];
+            return [
+                'message' => 'Logged out',
+            ];
+        }
     }
 }
